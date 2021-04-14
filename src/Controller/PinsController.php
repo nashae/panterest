@@ -70,7 +70,7 @@ class PinsController extends AbstractController
         ]);
     }
 
-    #[Route("/pins/{id<[0-9]+>}/delete", name:"app_pins_delete", methods:["DELETE"])]
+    #[Route("/pins/{id<[0-9]+>}", name:"app_pins_delete", methods:["DELETE"])]
     public function delete(Pin $pin, Request $request):Response
     {
         if($this->isCsrfTokenValid('pin_deletion_'.$pin->getId(), $request->request->get('csrf_token'))){
