@@ -17,7 +17,7 @@
 					<a href="{{ path('app_pins_show', {id: pin.id}) }}" class="text-secondary text-decoration-none">{{pin.title}}</a>
 				</h1>
 				<p class="text-muted pl-3 pb-3">
-					<time datetime="{{ pin.createdAt|date('Y-m-d H:i:s') }}"><small>Submitted {{ pin.createdAt|ago }} by nicolas</small></time>
+					<time datetime="{{ pin.createdAt|date('Y-m-d H:i:s') }}"><small>Submitted {{ pin.createdAt|ago }} by {{pin.user.fullName}}</small></time>
 				</p>
 				<p class="pl-3 pb-3">{{pin.description}}</p>
 				<div class="pl-3 pb-3">
