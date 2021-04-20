@@ -2,8 +2,9 @@
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Twig\Extension\AbstractExtension;
+use Symfony\Component\Security\Core\Security;
 
 class AppExtension extends AbstractExtension
 {
