@@ -36,6 +36,11 @@ class ResetPasswordController extends AbstractController
     #[Route('', name: 'app_forgot_password_request')]
     public function request(Request $request, MailerInterface $mailer): Response
     {
+        if($this->getUser()){
+            $this->addFlash('error', 'Already logged in');
+            return $this->redirectToRoute('app_home');
+        } 
+        
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
 
