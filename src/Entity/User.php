@@ -210,21 +210,26 @@ class User implements UserInterface
         return $this;
     }
 
+    
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+    
+    public function setIsVerified(bool $isVerified): self
+    {
+        $this->isVerified = $isVerified;
+        
+        return $this;
+    }
+    
     public function getFullName(): string
     {
         return $this->firstName .' '.$this->lastName;
     }
 
-    public function isVerified(): bool
+    public function gravatar(?int $size = 100): string
     {
-        return $this->isVerified;
+        return "https://www.gravatar.com/avatar/". md5(strtolower(trim($this->email)))."?s=".$size;
     }
-
-    public function setIsVerified(bool $isVerified): self
-    {
-        $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
 }
