@@ -228,7 +228,7 @@ class User implements UserInterface
         return $this->firstName .' '.$this->lastName;
     }
 
-    public function gravatar(?int $size = 100): string
+    public function gravatarUrl(?int $size = 100): string
     {
         return "https://www.gravatar.com/avatar/". md5(strtolower(trim($this->email)))."?s=".$size;
     }
