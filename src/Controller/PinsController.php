@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PinsController extends AbstractController
@@ -37,8 +38,12 @@ class PinsController extends AbstractController
     }
 
     #[Route("/pins/create", name:"app_pins_create", methods:["GET", "POST"])]
+    /**
+     * @Security("is_granted('ROLE_USER') && user.isVerified()")
+     */
     public function create(Request $request, UserRepository $userRepo): response
     {
+        
         $pin = new Pin;
         $form = $this->createForm(PinType::class, $pin);
         $form->handleRequest($request);
@@ -57,8 +62,25 @@ class PinsController extends AbstractController
     }
 
     #[Route("/pins/{id<[0-9]+>}/edit", name:"app_pins_edit", methods:["GET", "PUT"])]
+    /**
+     * @Security("is_granted('PIN_EDIT', pin)")
+     */
     public function edit(Pin $pin, Request $request):Response
     {
+        
+        if($pin->getUser() !== $this->getUser()){
+            throw $this->createAccessDeniedException("forbidden action");
+        }
+
+        if(!$this->getUser()){
+            throw $this->createAccessDeniedException('you need to login or register');
+        }
+
+        if(!$this->getUser()->isVerified()){
+            throw $this->createAccessDeniedException('you need to verify your account');
+        }
+
+
         $form = $this->createForm(PinType::class, $pin, [
             'method' => "PUT"
         ]);
@@ -75,8 +97,24 @@ class PinsController extends AbstractController
     }
 
     #[Route("/pins/{id<[0-9]+>}", name:"app_pins_delete", methods:["DELETE"])]
+    /**
+     * @Security("is_granted('ROLE_USER') and user.isVerified() and pin.getUser() == user")
+     */
     public function delete(Pin $pin, Request $request):Response
     {
+        if(!$this->getUser()){
+            throw $this->createAccessDeniedException('you need to login or register');
+        }
+        
+        if($pin->getUser() !== $this->getUser()){
+            throw $this->createAccessDeniedException("forbidden action");
+        }
+
+        if(!$this->getUser()->isVerified()){
+            throw $this->createAccessDeniedException('you need to verify your account');
+        }
+
+
         if($this->isCsrfTokenValid('pin_deletion_'.$pin->getId(), $request->request->get('csrf_token'))){
             $this->em->remove($pin);
             $this->em->flush();
