@@ -21,7 +21,7 @@
 						<time datetime="{{ pin.createdAt|date('Y-m-d H:i:s') }}"><small>Submitted {{ pin.createdAt|ago }} by {{pin.user.fullName}}</small></time>
 					</p>
 					<p class="text-secondary text-break">{{pin.description}}</p>
-					{% if (app.user is same as pin.user) %}
+					{% if is_granted('PIN_EDIT' or 'PIN_DELETE', pin) %}
 						<div class="pt-3">
 							<a href="{{path('app_pins_edit', {id: pin.id})}}" class="btn btn-light">Edit</a>
 							<a href="#" onclick="event.preventDefault(); confirm('Are you sure?') && document.getElementById('js-pin-delete-form').submit();" class="btn btn-light">Delete</a>
